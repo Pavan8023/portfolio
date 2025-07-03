@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pavan Patil | Full Stack Developer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0f172a',
+                        secondary: '#1e293b',
+                        accent: '#3b82f6',
+                        text: '#f1f5f9'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #020617;
+            color: #f1f5f9;
+            scroll-behavior: smooth;
+        }
+
+        .section-title {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 2.5rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 4px;
+            background: #3b82f6;
+            border-radius: 2px;
+        }
+
+        .skill-bar {
+            height: 8px;
+            background-color: #334155;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .skill-progress {
+            height: 100%;
+            background-color: #3b82f6;
+            border-radius: 4px;
+        }
+
+        .project-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid #334155;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #3b82f6;
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            top: 24px;
+            left: 7px;
+            width: 2px;
+            height: calc(100% - 8px);
+            background: #3b82f6;
+        }
+
+        .timeline-item:last-child::after {
+            display: none;
+        }
+
+        .nav-link {
+            position: relative;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #3b82f6;
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link.active::after {
+            width: 100%;
+        }
+
+        .floating {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-20px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+        
+        /* Toast notification styles */
+        .toast {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 16px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateX(200%);
+            transition: transform 0.3s ease-out;
+        }
+        
+        .toast.show {
+            transform: translateX(0);
+        }
+        
+        .toast.success {
+            background-color: #10b981;
+            color: white;
+        }
+        
+        .toast.error {
+            background-color: #ef4444;
+            color: white;
+        }
+        
+        .toast .close {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body class="bg-primary">
+    <!-- Toast notification -->
+    <div id="toast" class="toast">
+        <span id="toast-message"></span>
+        <button class="close">&times;</button>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full bg-primary/90 backdrop-blur-sm z-50 border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center">
+                    <span class="text-accent font-bold text-xl">Pavan Patil</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-center space-x-8">
+                        <a href="#home" class="nav-link text-text hover:text-accent active">Home</a>
+                        <a href="#about" class="nav-link text-text hover:text-accent">About</a>
+                        <a href="#experience" class="nav-link text-text hover:text-accent">Experience</a>
+                        <a href="#education" class="nav-link text-text hover:text-accent">Education</a>
+                        <a href="#skills" class="nav-link text-text hover:text-accent">Skills</a>
+                        <a href="#projects" class="nav-link text-text hover:text-accent">Projects</a>
+                        <a href="#contact" class="nav-link text-text hover:text-accent">Contact</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="menuBtn" class="text-text focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-secondary">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#home"
+                    class="block px-3 py-2 rounded-md text-base font-medium text-text hover:bg-gray-800">Home</a>
+                <a href="#about"
+                    class="block px-3 py-2 rounded-md text-base font-medium text-text hover:bg-gray-800">About</a>
+                <a href="#experience"
+                    class="block px-3 py-2 rounded-md text-base font-medium text-text hover:bg-gray-800">Experience</a>
+                <a href="#education"
+                    class="block px-3 py-2 rounded-md text-base font-medium text-text hover:bg-gray-800">Education</a>
+                <a href="#skills"
+                    class="block px-3 py-2 rounded-md text-base font-medium text-text hover:bg-gray-800">Skills</a>
+                <a href="#projects"
+                    class="block px-3 py-2 rounded-md text-base font-medium text-text hover:bg-gray-800">Projects</a>
+                <a href="#contact"
+                    class="block px-3 py-2 rounded-md text-base font-medium text-text hover:bg-gray-800">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="min-h-screen flex items-center pt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <h1 class="text-4xl md:text-6xl font-bold text-text">
+                        Hi, I'm <span class="text-accent">Pavan Patil</span>
+                    </h1>
+                    <h2 class="text-2xl md:text-4xl font-semibold mt-4 text-gray-300">
+                        Full Stack Developer & AI Specialist
+                    </h2>
+                    <p class="mt-6 text-lg text-gray-300 max-w-2xl">
+                        Passionate about creating responsive, user-friendly websites with modern design principles and
+                        robust functionality.
+                    </p>
+                    <div class="mt-8 flex flex-wrap gap-4">
+                        <a href="#contact"
+                            class="px-6 py-3 bg-accent text-white rounded-lg font-medium hover:bg-blue-500 transition duration-300">
+                            Contact Me
+                        </a>
+                        <a href="https://pavanpatil8023.netlify.app" target="_blank"
+                            class="px-6 py-3 border border-accent text-accent rounded-lg font-medium hover:bg-accent hover:text-white transition duration-300">
+                            View Portfolio
+                        </a>
+                    </div>
+                    <div class="mt-12 flex space-x-6">
+                        <a href="mailto:pavanpatil8023@gmail.com"
+                            class="text-gray-300 hover:text-accent transition duration-300">
+                            <i class="fas fa-envelope text-xl"></i>
+                        </a>
+                        <a href="tel:+919322108023" class="text-gray-300 hover:text-accent transition duration-300">
+                            <i class="fas fa-phone text-xl"></i>
+                        </a>
+                        <a href="https://github.com/Pavan8023"
+                            class="text-gray-300 hover:text-accent transition duration-300">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/pavan-patil-8bb819315?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+                            class="text-gray-300 hover:text-accent transition duration-300">
+                            <i class="fab fa-linkedin-in text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="flex justify-center">
+                    <div class="relative">
+                        <div class="absolute inset-0 bg-accent rounded-full opacity-20 blur-3xl -z-10 animate-pulse">
+                        </div>
+                        <div
+                            class="bg-gray-800 border-2 border-accent rounded-full w-64 h-64 md:w-80 md:h-80 flex items-center justify-center floating">
+                            <img src="IMG_6118.JPG" class="rounded-full w-full h-full object-cover" alt="">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="py-20 bg-secondary">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-text section-title">About Me</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-10">
+                <div>
+                    <p class="text-lg text-gray-300 mb-6">
+                        I am a passionate and creative BCA graduate with a solid foundation in web development and
+                        modern design principles. Now evolving as a Full Stack Developer and AI tool specialist, I bring
+                        a versatile skill set that blends frontend finesse with backend logic.
+                    </p>
+                    <p class="text-lg text-gray-300 mb-6">
+                        I have hands-on experience in building responsive, user-friendly websites that are both visually
+                        engaging and functionally robust. My expertise includes Firebase integration, payment gateway
+                        APIs, and real-time database handling, enabling me to develop secure and scalable web
+                        applications.
+                    </p>
+                    <p class="text-lg text-gray-300">
+                        With strong problem-solving abilities and a commitment to continuous learning, I stay updated
+                        with the latest web trends and technologies to craft meaningful digital experiences.
+                    </p>
+                </div>
+                <div class="bg-gray-800 rounded-xl p-8 border border-gray-700">
+                    <h3 class="text-xl font-semibold text-text mb-4">Personal Info</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <span class="text-accent mr-3"><i class="fas fa-map-marker-alt"></i></span>
+                            <span class="text-gray-300">AT Kurukali TQ-Kagal, Kolhapur</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-accent mr-3"><i class="fas fa-envelope"></i></span>
+                            <span class="text-gray-300">pavanpatil8023@gmail.com</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-accent mr-3"><i class="fas fa-phone"></i></span>
+                            <span class="text-gray-300">+91 9322108023</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-accent mr-3"><i class="fas fa-globe"></i></span>
+                            <span class="text-gray-300">pavanpatil8023.netlify.app</span>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-accent mr-3"><i class="fas fa-language"></i></span>
+                            <span class="text-gray-300">English, Marathi, Hindi</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-20 bg-primary">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-text section-title">Work Experience</h2>
+            <div class="mt-10">
+                <div class="timeline-item">
+                    <div class="bg-secondary rounded-xl p-6 border border-gray-700">
+                        <div class="flex flex-wrap justify-between items-start">
+                            <div>
+                                <h3 class="text-xl font-bold text-text">Web Developer Intern</h3>
+                                <p class="text-accent font-medium">Electrotech Automation</p>
+                            </div>
+                            <span class="text-gray-400 mt-2 md:mt-0">October 2024 - December 2024</span>
+                        </div>
+                        <p class="mt-4 text-gray-300">
+                            Successfully completed a web development internship at Electrotech, where I played a key
+                            role in designing and developing dynamic, user-focused websites. Strengthened skills in
+                            HTML, CSS, JavaScript, and responsive design while working with industry tools like
+                            Bootstrap and EmailJS API for form submissions and client communication integration.
+                        </p>
+                        <div class="mt-4">
+                            <h4 class="font-semibold text-text">Key Contributions:</h4>
+                            <ul class="mt-2 list-disc list-inside text-gray-300 space-y-1">
+                                <li>Created visually appealing, fast-loading, and mobile-responsive interfaces</li>
+                                <li>Implemented form submissions and client communication systems</li>
+                                <li>Gained practical understanding of real-world development workflows</li>
+                                <li>Sharpened problem-solving abilities in a professional environment</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="py-20 bg-secondary">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-text section-title">Education</h2>
+            <div class="mt-10 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="timeline-item">
+                    <div class="bg-primary rounded-xl p-6 border border-gray-700">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-xl font-bold text-text">Bachelor of Computer Application</h3>
+                                <p class="text-accent font-medium">KLE Society's College of BCA Nipani</p>
+                            </div>
+                            <span class="text-gray-400">Sept 2022 - July 2025</span>
+                        </div>
+                        <p class="mt-4 text-gray-300">
+                            Specialized in Web Development & Information Technology. Gained comprehensive knowledge in
+                            computer applications with a focus on modern web technologies and software development
+                            principles.
+                        </p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="bg-primary rounded-xl p-6 border border-gray-700">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="text-xl font-bold text-text">Senior Secondary School</h3>
+                                <p class="text-accent font-medium">Dexchand College Arjunnagar, Nipani</p>
+                            </div>
+                            <span class="text-gray-400">June 2020 - April 2022</span>
+                        </div>
+                        <p class="mt-4 text-gray-300">
+                            Completed Commerce with specialization in Information Technology. Developed foundational
+                            knowledge in business and technology integration.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="py-20 bg-primary">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-text section-title">Skills & Expertise</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-10">
+                <!-- Technical Skills -->
+                <div>
+                    <h3 class="text-xl font-semibold text-text mb-6">Technical Skills</h3>
+                    <div class="space-y-6">
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-300 font-medium">HTML/CSS & JavaScript</span>
+                                <span class="text-gray-400">95%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress w-[95%]"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-300 font-medium">React & Tailwind CSS</span>
+                                <span class="text-gray-400">90%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress w-[90%]"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-300 font-medium">Node.js & Express</span>
+                                <span class="text-gray-400">85%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress w-[85%]"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-300 font-medium">Firebase & MongoDB</span>
+                                <span class="text-gray-400">88%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress w-[88%]"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-2">
+                                <span class="text-gray-300 font-medium">Python & PHP</span>
+                                <span class="text-gray-400">80%</span>
+                            </div>
+                            <div class="skill-bar">
+                                <div class="skill-progress w-[80%]"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Other Skills -->
+                <div>
+                    <h3 class="text-xl font-semibold text-text mb-6">Additional Skills</h3>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="bg-secondary p-4 rounded-lg border border-gray-700">
+                            <h4 class="font-semibold text-text mb-2">Frameworks & Libraries</h4>
+                            <ul class="text-gray-300 space-y-1">
+                                <li>Tailwind CSS</li>
+                                <li>React.js</li>
+                                <li>Node.js</li>
+                                <li>Express.js</li>
+                            </ul>
+                        </div>
+                        <div class="bg-secondary p-4 rounded-lg border border-gray-700">
+                            <h4 class="font-semibold text-text mb-2">Tools & Platforms</h4>
+                            <ul class="text-gray-300 space-y-1">
+                                <li>Git & GitHub</li>
+                                <li>Firebase</li>
+                                <li>Figma</li>
+                                <li>Canva</li>
+                            </ul>
+                        </div>
+                        <div class="bg-secondary p-4 rounded-lg border border-gray-700">
+                            <h4 class="font-semibold text-text mb-2">Database</h4>
+                            <ul class="text-gray-300 space-y-1">
+                                <li>MySQL</li>
+                                <li>MongoDB</li>
+                                <li>Firestore</li>
+                            </ul>
+                        </div>
+                        <div class="bg-secondary p-4 rounded-lg border border-gray-700">
+                            <h4 class="font-semibold text-text mb-2">Other Skills</h4>
+                            <ul class="text-gray-300 space-y-1">
+                                <li>REST APIs</li>
+                                <li>Payment Gateway</li>
+                                <li>Responsive Design</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="mt-8">
+                        <h4 class="text-xl font-semibold text-text mb-4">Soft Skills</h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="px-3 py-1 bg-secondary text-text rounded-full border border-gray-700">Communication</span>
+                            <span
+                                class="px-3 py-1 bg-secondary text-text rounded-full border border-gray-700">Creativity</span>
+                            <span class="px-3 py-1 bg-secondary text-text rounded-full border border-gray-700">Team
+                                Work</span>
+                            <span class="px-3 py-1 bg-secondary text-text rounded-full border border-gray-700">Time
+                                Management</span>
+                            <span class="px-3 py-1 bg-secondary text-text rounded-full border border-gray-700">Problem
+                                Solving</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 bg-secondary">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-text section-title">Projects</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
+                <!-- Project 1 -->
+                <div class="project-card bg-primary rounded-xl overflow-hidden border border-gray-700">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-text">Sports Eligibility Platform</h3>
+                        <p class="text-accent mt-1">College Project</p>
+                        <p class="text-gray-300 mt-4">
+                            A system where athletes can check their eligibility status by making a one-time payment.
+                            Once logged in, users can explore details of coaches from 22 Indian states.
+                        </p>
+                        <div class="mt-6">
+                            <h4 class="font-semibold text-text">Features:</h4>
+                            <ul class="mt-2 text-gray-300 list-disc list-inside space-y-1">
+                                <li>One-time payment system</li>
+                                <li>Coach database with contact details</li>
+                                <li>State-wise categorization</li>
+                                <li>Session-based access</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-gray-800 text-text rounded-full text-sm">React</span>
+                            <span class="px-3 py-1 bg-gray-800 text-text rounded-full text-sm">Node.js</span>
+                            <span class="px-3 py-1 bg-gray-800 text-text rounded-full text-sm">MongoDB</span>
+                            <span class="px-3 py-1 bg-gray-800 text-text rounded-full text-sm">Payment Gateway</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div class="project-card bg-primary rounded-xl overflow-hidden border border-gray-700">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-text">Women's Empowerment Portal</h3>
+                        <p class="text-accent mt-1">Hackathon Project</p>
+                        <p class="text-gray-300 mt-4">
+                            Developed during a national-level hackathon, this platform empowers women to create personal
+                            stores, build professional profiles, join communities, and explore job opportunities.
+                        </p>
+                        <div class="mt-6">
+                            <h4 class="font-semibold text-text">Features:</h4>
+                            <ul class="mt-2 text-gray-300 list-disc list-inside space-y-1">
+                                <li>E-commerce store creation</li>
+                                <li>Professional profile building</li>
+                                <li>Community forums</li>
+                                <li>Job board integration</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-gray-800 text-text rounded-full text-sm">React</span>
+                            <span class="px-3 py-1 bg-gray-800 text-text rounded-full text-sm">Firebase</span>
+                            <span class="px-3 py-1 bg-gray-800 text-text rounded-full text-sm">Tailwind CSS</span>
+                            <span class="px-3 py-1 bg-gray-800 text-text rounded-full text-sm">REST API</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div class="project-card bg-primary rounded-xl overflow-hidden border border-gray-700">
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold text-text">Travel Expense Tracker</h3>
+                        <p class="text-accent mt-1">Personal Project</p>
+                        <p class="text-gray-300 mt-4">
+                            A real-time trip and expense management tool for travelers, allowing users to add multiple
+                            trips and track live expenses throughout their journey.
+                        </p>
+                        <div class="mt-6">
+                            <h4 class="font-semibold text-text">Features:</h4>
+                            <ul class="mt-2 text-gray-300 list-disc list-inside space-y-1">
+                                <li>Real-time expense tracking</li>
+                                <li>Multiple trip management</li>
+                                <li>Live currency conversion</li>
+                                <li>Session-based data storage</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6 flex flex-wrap gap-2">
+                            <span class="px-3 py-1 bg-gray-800 text-text rounded-full text-sm">JavaScript</span>
+                            <span class="px-3 py-1 bg-gray-800 text-text rounded-full text-sm">Firebase</span>
+                            <span class="px-3 py-1 bg-gray-800 text-text rounded-full text-sm">Currency API</span>
+                            <span class="px-3 py-1 bg-gray-800 text-text rounded-full text-sm">Real-time DB</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section class="py-20 bg-primary">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-text section-title">Achievements</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
+                <div class="bg-secondary rounded-xl p-6 border border-gray-700">
+                    <div class="flex items-start">
+                        <div class="bg-accent/10 p-3 rounded-lg mr-4">
+                            <i class="fas fa-trophy text-accent text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-text">Competition Wins</h3>
+                            <p class="text-gray-300 mt-2">
+                                Secured multiple 1st and 2nd place ranks in web development and coding competitions held
+                                at various inter-KLE college events.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-secondary rounded-xl p-6 border border-gray-700">
+                    <div class="flex items-start">
+                        <div class="bg-accent/10 p-3 rounded-lg mr-4">
+                            <i class="fas fa-medal text-accent text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-text">Hackathon Success</h3>
+                            <p class="text-gray-300 mt-2">
+                                Participated in national-level hackathons, ranking in the top 10 out of 135 teams at
+                                Sanjay Ghodawat University's 48-hour hackathon.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-secondary rounded-xl p-6 border border-gray-700">
+                    <div class="flex items-start">
+                        <div class="bg-accent/10 p-3 rounded-lg mr-4">
+                            <i class="fas fa-certificate text-accent text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-text">MERN Stack Certification</h3>
+                            <p class="text-gray-300 mt-2">
+                                Successfully completed a one-week certification course on MERN Stack Development
+                                covering MongoDB, Express.js, React.js, and Node.js.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-secondary rounded-xl p-6 border border-gray-700">
+                    <div class="flex items-start">
+                        <div class="bg-accent/10 p-3 rounded-lg mr-4">
+                            <i class="fas fa-globe text-accent text-2xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold text-text">English Proficiency</h3>
+                            <p class="text-gray-300 mt-2">
+                                Certified in English proficiency with a Duolingo English Test (DET) score of 105/160.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-20 bg-secondary">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-text section-title">Get In Touch</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 mt-10">
+                <div>
+                    <p class="text-lg text-gray-300 mb-8">
+                        I'm currently available for freelance work and full-time opportunities. If you have a project
+                        that you want to get started or think you need my help with something, then get in touch.
+                    </p>
+                    <div class="space-y-6">
+                        <div class="flex items-start">
+                            <div class="bg-accent/10 p-3 rounded-lg mr-4">
+                                <i class="fas fa-map-marker-alt text-accent text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-text">Location</h3>
+                                <p class="text-gray-300 mt-1">AT Kurukali TQ-Kagal, Kolhapur</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-accent/10 p-3 rounded-lg mr-4">
+                                <i class="fas fa-envelope text-accent text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-text">Email</h3>
+                                <p class="text-gray-300 mt-1">pavanpatil8023@gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="bg-accent/10 p-3 rounded-lg mr-4">
+                                <i class="fas fa-phone text-accent text-xl"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold text-text">Phone</h3>
+                                <p class="text-gray-300 mt-1">+91 9322108023</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-primary rounded-xl p-8 border border-gray-700">
+                    <form id="contact-form">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label for="name" class="block text-gray-300 mb-2">Name</label>
+                                <input type="text" id="name" name="from_name" required
+                                    class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-accent">
+                            </div>
+                            <div>
+                                <label for="email" class="block text-gray-300 mb-2">Email</label>
+                                <input type="email" id="email" name="from_email" required
+                                    class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-accent">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="subject" class="block text-gray-300 mb-2">Subject</label>
+                                <input type="text" id="subject" name="subject" required
+                                    class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-accent">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label for="message" class="block text-gray-300 mb-2">Message</label>
+                                <textarea id="message" name="message" rows="5" required
+                                    class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-gray-300 focus:outline-none focus:ring-2 focus:ring-accent"></textarea>
+                            </div>
+                            <div class="md:col-span-2">
+                                <button type="submit" id="submit-btn"
+                                    class="px-6 py-3 bg-accent text-white rounded-lg font-medium hover:bg-blue-500 transition duration-300 w-full">
+                                    Send Message
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-10 bg-gray-900 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="text-center md:text-left mb-6 md:mb-0">
+                    <h3 class="text-xl font-bold text-accent">Pavan Patil</h3>
+                    <p class="text-gray-400 mt-2">Full Stack Developer & AI Specialist</p>
+                </div>
+                <div class="flex space-x-6">
+                    <a href="mailto:pavanpatil8023@gmail.com"
+                        class="text-gray-400 hover:text-accent transition duration-300">
+                        <i class="fab fa-google text-xl"></i>
+                    </a>
+                    <a href="https://github.com/Pavan8023"
+                        class="text-gray-300 hover:text-accent transition duration-300">
+                        <i class="fab fa-github text-xl"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/pavan-patil-8bb819315?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app"
+                        class="text-gray-300 hover:text-accent transition duration-300">
+                        <i class="fab fa-linkedin-in text-xl"></i>
+                    </a>
+                    <a href="https://pavanpatil8023.netlify.app"
+                        class="text-gray-400 hover:text-accent transition duration-300">
+                        <i class="fas fa-globe text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-8 text-center text-gray-500 text-sm">
+                <p>&copy; 2025 Pavan Patil. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- EmailJS Script -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+    
+    <script>
+        // Initialize EmailJS with your public key
+        (function() {
+            emailjs.init({
+                publicKey: "aqY2HLpPqbdaIDSYm",
+            });
+        })();
+
+        // Mobile Menu Toggle
+        const menuBtn = document.getElementById('menuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        menuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when clicking a link
+        const mobileLinks = document.querySelectorAll('#mobileMenu a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80,
+                    behavior: 'smooth'
+                });
+
+                // Update active nav link
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+
+        // Update active nav link on scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            let currentSection = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+
+                if (pageYOffset >= sectionTop - 100) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href').substring(1) === currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        });
+        
+        // Toast notification functions
+        const toast = document.getElementById('toast');
+        const toastMessage = document.getElementById('toast-message');
+        const closeToast = document.querySelector('.close');
+        
+        function showToast(message, isSuccess) {
+            toastMessage.textContent = message;
+            toast.className = `toast ${isSuccess ? 'success' : 'error'} show`;
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 5000);
+        }
+        
+        closeToast.addEventListener('click', () => {
+            toast.classList.remove('show');
+        });
+        
+        // EmailJS form handling
+        const contactForm = document.getElementById('contact-form');
+        const submitBtn = document.getElementById('submit-btn');
+        
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Change button text to show loading state
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+            submitBtn.disabled = true;
+            
+            // Get form data
+            const formData = {
+                from_name: contactForm.name.value,
+                from_email: contactForm.email.value,
+                subject: contactForm.subject.value,
+                message: contactForm.message.value
+            };
+            
+            // Send email using EmailJS
+            emailjs.send('service_nfi3cm9', 'template_m3ogbmb', formData)
+                .then(() => {
+                    showToast('Message sent successfully!', true);
+                    contactForm.reset();
+                })
+                .catch((error) => {
+                    showToast('Failed to send message. Please try again.', false);
+                    console.error('EmailJS Error:', error);
+                })
+                .finally(() => {
+                    // Reset button
+                    submitBtn.innerHTML = 'Send Message';
+                    submitBtn.disabled = false;
+                });
+        });
+    </script>
+</body>
+
+</html>
