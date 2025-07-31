@@ -143,7 +143,7 @@
                 transform: translateY(0px);
             }
         }
-        
+
         /* Toast notification styles */
         .toast {
             position: fixed;
@@ -157,21 +157,21 @@
             transform: translateX(200%);
             transition: transform 0.3s ease-out;
         }
-        
+
         .toast.show {
             transform: translateX(0);
         }
-        
+
         .toast.success {
             background-color: #10b981;
             color: white;
         }
-        
+
         .toast.error {
             background-color: #ef4444;
             color: white;
         }
-        
+
         .toast .close {
             position: absolute;
             top: 8px;
@@ -264,7 +264,8 @@
                         </a>
                     </div>
                     <div class="mt-6 flex flex-wrap gap-4 w-full">
-                        <a href="resume.html" class="w-80 px-6 py-3 border border-accent text-center rounded-lg font-medium hover:bg-accent hover:text-white transition duration-300">
+                        <a href="resume.html"
+                            class="w-80 px-6 py-3 border border-accent text-center rounded-lg font-medium hover:bg-accent hover:text-white transition duration-300">
                             See Resume
                         </a>
                     </div>
@@ -292,7 +293,7 @@
                         </div>
                         <div
                             class="bg-gray-800 border-2 border-accent rounded-full w-64 h-64 md:w-80 md:h-80 flex items-center justify-center floating">
-                            <img src="IMG_6118.JPG" class="rounded-full w-full h-full object-cover" alt="">
+                            <img src="cover.jpg" class="rounded-full w-full h-full object-cover" alt="">
                         </div>
                     </div>
                 </div>
@@ -355,7 +356,8 @@
     <section id="experience" class="py-20 bg-primary">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 class="text-3xl font-bold text-text section-title">Work Experience</h2>
-            <div class="mt-10">
+            <div class="mt-10 space-y-8">
+                <!-- Electrotech Automation -->
                 <div class="timeline-item">
                     <div class="bg-secondary rounded-xl p-6 border border-gray-700">
                         <div class="flex flex-wrap justify-between items-start">
@@ -368,7 +370,7 @@
                         <p class="mt-4 text-gray-300">
                             Successfully completed a web development internship at Electrotech, where I played a key
                             role in designing and developing dynamic, user-focused websites. Strengthened skills in
-                            HTML, CSS, JavaScript, and responsive design while working with industry tools like
+                            HTML, CSS, JavaScript, and responsive design while working with tools like
                             Bootstrap and EmailJS API for form submissions and client communication integration.
                         </p>
                         <div class="mt-4">
@@ -382,9 +384,36 @@
                         </div>
                     </div>
                 </div>
+                <!-- Psyche Panacea -->
+                <div class="timeline-item">
+                    <div class="bg-secondary rounded-xl p-6 border border-gray-700">
+                        <div class="flex flex-wrap justify-between items-start">
+                            <div>
+                                <h3 class="text-xl font-bold text-text">Web Development Trainee</h3>
+                                <p class="text-accent font-medium">Psyche Panacea</p>
+                            </div>
+                            <span class="text-gray-400 mt-2 md:mt-0">October 2024 - December 2024</span>
+                        </div>
+                        <p class="mt-4 text-gray-300">
+                            Psyche Panacea is a business company founded in 2001 that previously used a WordPress site.
+                            During my internship, I developed a fully coded website using HTML, Tailwind CSS, Vanilla
+                            JavaScript, and REST APIs.
+                        </p>
+                        <div class="mt-4">
+                            <h4 class="font-semibold text-text">Key Contributions:</h4>
+                            <ul class="mt-2 list-disc list-inside text-gray-300 space-y-1">
+                                <li>Developed a new website from scratch in just one month</li>
+                                <li>Created a faster, mobile-friendly, and more visually appealing site</li>
+                                <li>Maintained and updated the site, resolving bugs and improving functionality</li>
+                                <li>Used REST APIs to enhance interactivity and improve performance</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
+
 
     <!-- Education Section -->
     <section id="education" class="py-20 bg-secondary">
@@ -501,7 +530,7 @@
                             <ul class="text-gray-300 space-y-1">
                                 <li>Git & GitHub</li>
                                 <li>Firebase</li>
-                                <li>Figma</li>
+                                <li>VS Code</li>
                                 <li>Canva</li>
                             </ul>
                         </div>
@@ -807,14 +836,14 @@
 
     <!-- EmailJS Script -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    
+
     <script>
-        // Initialize EmailJS with your public key
-        (function() {
-            emailjs.init({
-                publicKey: "aqY2HLpPqbdaIDSYm",
-            });
-        })();
+            // Initialize EmailJS with your public key
+            (function () {
+                emailjs.init({
+                    publicKey: "aqY2HLpPqbdaIDSYm",
+                });
+            })();
 
         // Mobile Menu Toggle
         const menuBtn = document.getElementById('menuBtn');
@@ -876,37 +905,37 @@
                 }
             });
         });
-        
+
         // Toast notification functions
         const toast = document.getElementById('toast');
         const toastMessage = document.getElementById('toast-message');
         const closeToast = document.querySelector('.close');
-        
+
         function showToast(message, isSuccess) {
             toastMessage.textContent = message;
             toast.className = `toast ${isSuccess ? 'success' : 'error'} show`;
-            
+
             // Auto hide after 5 seconds
             setTimeout(() => {
                 toast.classList.remove('show');
             }, 5000);
         }
-        
+
         closeToast.addEventListener('click', () => {
             toast.classList.remove('show');
         });
-        
+
         // EmailJS form handling
         const contactForm = document.getElementById('contact-form');
         const submitBtn = document.getElementById('submit-btn');
-        
+
         contactForm.addEventListener('submit', (e) => {
             e.preventDefault();
-            
+
             // Change button text to show loading state
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
             submitBtn.disabled = true;
-            
+
             // Get form data
             const formData = {
                 from_name: contactForm.name.value,
@@ -914,7 +943,7 @@
                 subject: contactForm.subject.value,
                 message: contactForm.message.value
             };
-            
+
             // Send email using EmailJS
             emailjs.send('service_nfi3cm9', 'template_etos9fb', formData)
                 .then(() => {
